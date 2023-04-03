@@ -1,0 +1,7 @@
+.vs
+.git
+ToleranceHelper.vcxproj
+ToleranceHelper.vcxproj.filters
+ToleranceHelper.vcxproj.user
+
+Debug/
