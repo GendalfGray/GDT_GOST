@@ -1,55 +1,69 @@
 #include <SFML/Graphics.hpp>
 #include "Shapes.h"
-#include <iostream>
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(420, 380), "SFML works!");
 
-    sf::Vector2u WIN_SIZE = window.getSize();
-    unsigned int WIN_WIDTH = WIN_SIZE.x;
-    unsigned int WIN_HEIGHT = WIN_SIZE.y;
-    unsigned int WIN_MIDDLE = WIN_HEIGHT / 2;
-    int WIN_QUARTER = WIN_MIDDLE / 2;
-    
-    float holeToleranceValue = 90.f;
-    float shaftToleranceValue = 89.f;
-
-    double bar_scale = WIN_QUARTER / holeToleranceValue;
-
-    // HOLE
-    sf::RectangleShape hole_tolerance_column(sf::Vector2f(50.f, -WIN_QUARTER));
-    hole_tolerance_column.setFillColor(sf::Color::Red);
-    hole_tolerance_column.setPosition(sf::Vector2f(50.f, WIN_MIDDLE));
-
-    float shaftScaledValue = shaftToleranceValue * bar_scale;
-
-    // SHAFT
-    sf::RectangleShape shaft_tolerance_column(sf::Vector2f(50.f, -shaftScaledValue));
-    shaft_tolerance_column.setFillColor(sf::Color::Blue);
-    shaft_tolerance_column.setPosition(sf::Vector2f(75.f, WIN_MIDDLE));
-
-    std::cout << "Pixels in bar: " << WIN_QUARTER << std::endl;
+    /*std::cout << "Pixels in bar: " << WIN_QUARTER << std::endl;
     std::cout << "Hole tolerance value: " << holeToleranceValue << std::endl;
     std::cout << "Shaft tolerance value: " << shaftToleranceValue << std::endl;
-    std::cout << "Bar scale: " << bar_scale << std::endl;
+    std::cout << "Bar scale: " << bar_scale << std::endl;*/
+   
+    Bar bar1{ 30, sf::Color::Red, true };
+    Bar bar2{ 40, sf::Color::Blue, false };
 
-    
+    TextBox textField1{20.f, 20.f, 100.f, 50.f};
+
     while (window.isOpen())
     {
         sf::Event event;
+        int a;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            switch (event.type)
+            {
+            
+            case sf::Event::MouseButtonPressed:
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    textField1.selectForm(sf::Mouse::getPosition(window));
+                }
+                break;
+
+            case sf::Event::TextEntered:
+
+                a = event.text.unicode;
+
+                textField1.typeIn(a);
+                break;
+            
+            case sf::Event::Closed:
                 window.close();
+                break;
+
+            case sf::Event::Resized:
+                sf::FloatRect view(0.f, 0.f, event.size.width, event.size.height);
+                window.setView(sf::View(view));
+                break;
+            }
         }
 
         window.clear();
 
+        //window.draw(textbox);
+        //tex.drawTo(window);
+        
         draw_grid(window);
 
-        window.draw(hole_tolerance_column);
-        window.draw(shaft_tolerance_column);
+        bar1.drawBar(window);
+        bar2.drawBar(window);
+
+        textField1.drawTo(window);
+
+        //draw_bar(window, 90, true);
+        //draw_bar(window, 85, false);
+
+        //textbox1.drawTo(window);
 
         window.display();
     }
