@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Shapes.h"
+#include "shapes.hpp"
 
 #define DELETE_KEY 8
 #define ENTER_KEY 13
