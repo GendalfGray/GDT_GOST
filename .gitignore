@@ -1,5 +1,6 @@
 .vs
 .git
+build
 ToleranceHelper.vcxproj
 ToleranceHelper.vcxproj.filters
 ToleranceHelper.vcxproj.user
