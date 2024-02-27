@@ -86,28 +86,5 @@ int main()
 
 double roughness(double top_tol, double bot_tol)
 {
-
-    if (top_tol > 0 && bot_tol > 0)
-    {
-        double tol_size = fabs(top_tol - bot_tol) * 1000;
-        return tol_size * 0.066;
-    }
-    else if (top_tol < 0 && bot_tol < 0)
-    {
-        double tol_size = fabs(fabs(top_tol) - fabs(bot_tol)) * 1000;
-        return tol_size * 0.066;
-    }
-
-    else if (top_tol < 0 && bot_tol > 0 ||
-             top_tol > 0 && bot_tol < 0)
-    {
-        double tol_size = (fabs(top_tol) + fabs(bot_tol)) * 1000;
-        return tol_size * 0.066;
-    }
-    else
-    {
-        double tol_size = fabs(top_tol - bot_tol) * 1000;
-        return tol_size * 0.066;
-    }
-    return -1.0;
+    return fabs(top_tol - bot_tol) * 0.066 * 1000;
 }
