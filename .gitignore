@@ -1,7 +1,5 @@
-.vs
+
 .git
-build/
+
 *.exe
-
-
-Debug/
+.vscode
