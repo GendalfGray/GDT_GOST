@@ -68,7 +68,7 @@ std::vector<std::string> getResults(std::string size, std::string userTolField)
         return std::vector<std::string>{nullptr};
     }
 
-    for (std::string toleranceValue : tol_fields)
+    for (std::string toleranceValue : TOL_FIELDS)
     {
         // Check first value first.
         // "H7, 18, 30, +0.0210, 0"
@@ -94,7 +94,28 @@ std::vector<std::string> getResults(std::string size, std::string userTolField)
     return std::vector<std::string>{"nullptr"};
 }
 
-void getFitResults(std::string size, std::string field) {
+
+void getFitResults(std::string size, std::string field_1, std::string field_2) {
+
+    std::vector<std::string> fit_1 = getResults(size, field_1);
+    std::vector<std::string> fit_2 = getResults(size, field_2);
+
+    // return std::vector<std::string>{size, toleranceFieldInFile, top_tol, bottom_tol};
+
+    // first bottom field value more or equal to top field value of second
+    if (std::stof(fit_1[3]) >= std::stof(fit_2[2]))
+    {
+        std::cout << "Free fit." << "\n";
+        return;
+    }
+    
+    if (std::stof(fit_2[2]) >= std::stof(fit_1[3]) && std::stof(fit_2[3]) >= std::stof(fit_1[3])){
+        
+        std::cout << "Press fit.";
+        return;
+    }
+
+    std::cout << "In the middle fit.";
 
 };
 

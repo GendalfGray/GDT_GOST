@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-void getFitResults(std::string, std::string);
+void getFitResults(std::string, std::string, std::string);
 void printHelp();
 void printResults(std::vector<std::string>);
 

@@ -1,7 +1,7 @@
 #include <array>
 #include <string>
 
-std::array<std::string, 13306> tol_fields{
+std::array<std::string, 13306> TOL_FIELDS{
     "A9,0,3,+0.295,+0.27",
     "A9,3,6,+0.3,+0.27",
     "A9,6,10,+0.316,+0.28",
