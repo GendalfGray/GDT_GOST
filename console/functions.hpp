@@ -7,6 +7,7 @@
 void getFitResults(std::string, std::string, std::string);
 void printHelp();
 void printResults(std::vector<std::string>);
+void findTolerance(std::string);
 
 double calcRoughness(double, double);
 

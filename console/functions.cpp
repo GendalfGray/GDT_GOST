@@ -94,7 +94,6 @@ std::vector<std::string> getResults(std::string size, std::string userTolField)
     return std::vector<std::string>{"nullptr"};
 }
 
-
 void getFitResults(std::string size, std::string field_1, std::string field_2) {
 
     std::vector<std::string> fit_1 = getResults(size, field_1);
@@ -122,6 +121,10 @@ void getFitResults(std::string size, std::string field_1, std::string field_2) {
 void printHelp()
 {
     std::cout << "For exit press Ctrl + C\n";
-    std::cout << "For tolerance field type: 40H7, 20g6 etc.\n";
-    std::cout << "For fit type: 40H7/g6, 20K7/m6 etc.\n";
+    std::cout << "For tolerance field type: field 40 H7, field 20 g6 etc.\n";
+    std::cout << "For fit type: fit 40 H7 g6, fit 20 K7 m6 etc.\n";
+}
+
+void findTolerance(std::string toleranceField){
+
 }
