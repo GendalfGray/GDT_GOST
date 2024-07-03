@@ -23,14 +23,13 @@ int main()
 
         if (slicedUserInput[0] == "help")
         {
-
             printHelp();
             continue;
         }
 
         if (slicedUserInput[0] == "find")
         {
-            // findToleranceField();
+            findTolerance(slicedUserInput);   
             continue;
         }
 
@@ -41,7 +40,7 @@ int main()
                 std::cout << "Not enough arguments. Type: field <size> <tolerance field>." << "\n";
                 continue;
             }
-            printResults(getResults(slicedUserInput[1], slicedUserInput[2]));
+            printResults(fetchResults(slicedUserInput[1], slicedUserInput[2]));
         }
 
         if (slicedUserInput[0] == "fit")
