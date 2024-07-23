@@ -6,49 +6,60 @@
 
 int main()
 {
+    std::cout << "For help print: help\n";
+
     while (true)
     {
         std::string userInput;
         std::getline(std::cin, userInput);
 
         std::stringstream userInputStream(userInput);
-        std::string word;
+        std::string userCommand;
+        std::string command;
 
         std::vector<std::string> slicedUserInput;
 
-        while (getline(userInputStream, word, ' '))
+        while (getline(userInputStream, userCommand, ' '))
         {
-            slicedUserInput.push_back(word);
+            slicedUserInput.push_back(userCommand);
         }
 
-        if (slicedUserInput[0] == "help")
+        if (slicedUserInput.size() == 0)
+        {
+            continue;
+        }
+        else
+        {
+            command = slicedUserInput[0];
+        }
+
+        if (command == "help")
         {
             printHelp();
             continue;
         }
 
-        if (slicedUserInput[0] == "find")
+        if (command == "find")
         {
-            findTolerance(slicedUserInput);   
+            findTolerance(slicedUserInput);
             continue;
         }
 
-        if (slicedUserInput[0] == "field")
+        if (command == "field")
         {
             if (slicedUserInput.size() <= 2)
             {
-                std::cout << "Not enough arguments. Type: field <size> <tolerance field>." << "\n";
+                std::cout << "Not enough arguments. Type: field <size> <tolerance field>.\n";
                 continue;
             }
-            printResults(fetchResults(slicedUserInput[1], slicedUserInput[2]));
+            printResults(fetchTolData(slicedUserInput[1], slicedUserInput[2]));
         }
 
-        if (slicedUserInput[0] == "fit")
+        if (command == "fit")
         {
-
             if (slicedUserInput.size() <= 3)
             {
-                std::cout << "Not enough arguments. Type: field <size> <hole tolerance field> <shaft tolerance field>." << "\n";
+                std::cout << "Not enough arguments. Type: field <size> <hole tolerance field> <shaft tolerance field>.\n";
                 continue;
             }
 
