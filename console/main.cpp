@@ -11,7 +11,7 @@ int main()
     while (true)
     {
         std::string userInput;
-        std::getline(std::cin, userInput);
+        getline(std::cin, userInput);
 
         std::stringstream userInputStream(userInput);
         std::string userCommand;
