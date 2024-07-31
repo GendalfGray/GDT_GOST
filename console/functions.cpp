@@ -108,7 +108,7 @@ void printHelp()
     std::cout << "For exit press Ctrl + C.\n";
     std::cout << "For tolerance field type: field <size> <field>: field 40 H7, field 20 g6 etc.\n";
     std::cout << "For fit type: fit <size> <field1> <field2>: fit 40 H7 g6, fit 20 K7 m6 etc.\n";
-    std::cout << "To find tolerance field type: find <size> <top tolerance field> <bootom tolerance field>: find H7 10, etc.\n";
+    std::cout << "To find tolerance field type: find <size> <top tolerance field> <bootom tolerance field>: find 25 +0.025 -0.05, etc.\n";
 }
 
 void findTolerance(std::vector<std::string> dataToFind)
