@@ -16,10 +16,10 @@ void printResults(std::vector<std::string> results)
     if (results[2] == "blank" || results[3] == "blank")
     {
         std::cout << "-- " << results[0] << results[1] << " -- \n";
-        std::cout << "n/a" << '\n';
-        std::cout << "n/a" << '\n';
+        std::cout << "n/a\n";
+        std::cout << "n/a\n";
 
-        std::cout << "Ra: n/a" << '\n';
+        std::cout << "Ra: n/a\n";
     }
 
     std::cout << "-- " << results[0] << results[1] << " -- \n";
@@ -27,14 +27,28 @@ void printResults(std::vector<std::string> results)
     std::cout << results[3] << '\n';
 }
 
-std::vector<std::string> fetchResults(std::string size, std::string userTolField)
+void printFitResults(std::string fitType,
+                     std::string size,
+                     std::string fitOneField,
+                     std::vector<std::string> fitOneData,
+                     std::string fitTwoField,
+                     std::vector<std::string> fitTwoData)
+{
+    std::cout << '\n';
+    std::cout << fitType << '\n';
+    std::cout << "----  " << size << fitOneField << "/" << fitTwoField << "  ----\n";
+    std::cout << fitOneData[2] << "\t" << fitTwoData[2] << '\n';
+    std::cout << fitOneData[3] << "\t" << fitTwoData[3] << '\n';
+}
+
+std::vector<std::string> fetchTolData(std::string size, std::string userTolField)
 {
     std::string min_size, max_size, top_tol, bottom_tol;
     std::string toleranceFieldInFile;
 
     if (std::stoi(size) > 3150)
     {
-        std::cout << "Size value out of range." << '\n';
+        std::cout << "Size value out of range.\n";
         return std::vector<std::string>{nullptr};
     }
 
@@ -42,17 +56,16 @@ std::vector<std::string> fetchResults(std::string size, std::string userTolField
     {
         // Check first value first.
         // "H7, 18, 30, +0.0210, 0"
-        std::stringstream inFileString(toleranceValue);
-
-        getline(inFileString, toleranceFieldInFile, ',');
+        std::stringstream stringFromDataFile(toleranceValue);
+        getline(stringFromDataFile, toleranceFieldInFile, ',');
 
         // Follow only of first entry is correct.
         if (toleranceFieldInFile == userTolField)
         {
-            getline(inFileString, min_size, ',');
-            getline(inFileString, max_size, ',');
-            getline(inFileString, top_tol, ',');
-            getline(inFileString, bottom_tol, ',');
+            getline(stringFromDataFile, min_size, ',');
+            getline(stringFromDataFile, max_size, ',');
+            getline(stringFromDataFile, top_tol, ',');
+            getline(stringFromDataFile, bottom_tol, ',');
 
             if (std::stod(min_size) <= std::stod(size) && std::stod(max_size) > std::stod(size))
             {
@@ -64,89 +77,90 @@ std::vector<std::string> fetchResults(std::string size, std::string userTolField
     return std::vector<std::string>{"nullptr"};
 }
 
-void getFitResults(std::string size, std::string field_1, std::string field_2)
+void getFitResults(std::string size,
+                   std::string fitOneField,
+                   std::string fitTwoField)
 {
-
-    std::vector<std::string> fit_1 = fetchResults(size, field_1);
-    std::vector<std::string> fit_2 = fetchResults(size, field_2);
+    std::vector<std::string> fitOneData = fetchTolData(size, fitOneField);
+    std::vector<std::string> fitTwoData = fetchTolData(size, fitTwoField);
 
     // return std::vector<std::string>{size, toleranceFieldInFile, top_tol, bottom_tol};
 
+    // "18, 30, +0.0210, 0"
     // first bottom field value more or equal to top field value of second
-    if (std::stof(fit_1[3]) >= std::stof(fit_2[2]))
+    if (std::stof(fitOneData[3]) >= std::stof(fitTwoData[2]))
     {
-        std::cout << "Free fit." << "\n";
+        printFitResults("Free fit.", size, fitOneField, fitOneData, fitTwoField, fitTwoData);
         return;
     }
 
-    if (std::stof(fit_2[2]) >= std::stof(fit_1[3]) && std::stof(fit_2[3]) >= std::stof(fit_1[3]))
+    if (std::stof(fitTwoData[2]) >= std::stof(fitOneData[3]) && std::stof(fitTwoData[3]) >= std::stof(fitOneData[2]))
     {
-
-        std::cout << "Press fit.";
+        printFitResults("Press fit.", size, fitOneField, fitOneData, fitTwoField, fitTwoData);
         return;
     }
 
-    std::cout << "In the middle fit.";
+    printFitResults("In the middle fit.", size, fitOneField, fitOneData, fitTwoField, fitTwoData);
 };
 
 void printHelp()
 {
-    std::cout << "For exit press Ctrl + C\n";
-    std::cout << "For tolerance field type: field 40 H7, field 20 g6 etc.\n";
-    std::cout << "For fit type: fit 40 H7 g6, fit 20 K7 m6 etc.\n";
+    std::cout << "For exit press Ctrl + C.\n";
+    std::cout << "For tolerance field type: field <size> <field>: field 40 H7, field 20 g6 etc.\n";
+    std::cout << "For fit type: fit <size> <field1> <field2>: fit 40 H7 g6, fit 20 K7 m6 etc.\n";
+    std::cout << "To find tolerance field type: find <size> <top tolerance field> <bootom tolerance field>: find 25 +0.025 -0.05, etc.\n";
 }
 
-void findTolerance(std::vector<std::string> fieldToFind, int numberOfResults)
+void findTolerance(std::vector<std::string> dataToFind)
 {
-    double size, top_tolField, bot_tolField;
+    int numberOfResults = 10;
 
     std::vector<char> answers;
-    
-    try
+
+    double size = std::stod(dataToFind.at(1));
+    double top_tolField = std::stod(dataToFind.at(2));
+    double bot_tolField = std::stod(dataToFind.at(3));
+
+    for (int i = 0; i <= numberOfResults; i++)
     {
-        size = std::stod(fieldToFind.at(1));
-        top_tolField = std::stod(fieldToFind.at(2));
-        bot_tolField = std::stod(fieldToFind.at(3));
-
-        for (int i = 1; i <= numberOfResults; i++)
+        for (std::string toleranceValue : TOL_FIELDS)
         {
-            for (std::string toleranceValue : TOL_FIELDS)
+            std::string toleranceFieldInFile;
+            std::string min_size, max_size, top_tol, bottom_tol;
+            // "H7, 18, 30, +0.0210, 0"
+            std::stringstream stringFromDataFile(toleranceValue);
+
+            getline(stringFromDataFile, toleranceFieldInFile, ',');
+            getline(stringFromDataFile, min_size, ',');
+            getline(stringFromDataFile, max_size, ',');
+
+            // std::cout << toleranceFieldInFile << '\n';
+            if (std::stod(min_size) <= size && std::stod(max_size) > size)
             {
-                std::string toleranceFieldInFile;
-                std::string min_size, max_size, top_tol, bottom_tol;
-                // "H7, 18, 30, +0.0210, 0"
-                std::stringstream inFileString(toleranceValue);
+                getline(stringFromDataFile, top_tol, ',');
+                getline(stringFromDataFile, bottom_tol, ',');
 
-                getline(inFileString, toleranceFieldInFile, ',');
-                getline(inFileString, min_size, ',');
-                getline(inFileString, max_size, ',');
-
-                if (std::stod(min_size) <= size && std::stod(max_size) > size)
+                if (top_tol == "blank" || bottom_tol == "blank")
                 {
-                    getline(inFileString, top_tol, ',');
-                    getline(inFileString, bottom_tol, ',');
+                    continue;
+                }
 
-                    if (top_tolField <= std::stod(top_tol) && bot_tolField >= std::stod(bottom_tol))
+                if (top_tolField <= std::stod(top_tol) && bot_tolField >= std::stod(bottom_tol))
+                {
+                    // if letter of field H, JS etc. in - skip.
+                    if (std::find(answers.begin(), answers.end(), toleranceFieldInFile[0]) != answers.end())
                     {
-                        // if letter of field H, JS etc. in - skip.
-                        if (std::find(answers.begin(), answers.end(), toleranceFieldInFile[0]) != answers.end())
-                        {
-                            continue;
-                        }
-                        else{
-                            answers.push_back(toleranceFieldInFile[0]);
-                            std::cout << i << ". " << toleranceFieldInFile << "\n";
-                            break;
-                        }
-                        
+                        continue;
+                    }
+                    else
+                    {
+                        answers.push_back(toleranceFieldInFile[0]);
+                        std::cout << i + 1 << ". " << toleranceFieldInFile << "\n";
+                        std::cout << "   " << top_tol << " - " << bottom_tol << "\n";
+                        break;
                     }
                 }
             }
         }
     }
-    catch (const std::out_of_range& oor) 
-    {
-        
-    }
-    
 }
